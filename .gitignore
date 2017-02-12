@@ -1,0 +1,22 @@
+# Mac
+.DS_Store
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.class
+
+# virtual machine crash logs, 
+hs_err_pid*
+
+# eclipse
+.metadata/
+.recommenders/
+.apt_generated/
+.settings/
+
+# nodejs
+node_modules/
