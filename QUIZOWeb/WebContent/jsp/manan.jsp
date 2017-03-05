@@ -38,6 +38,12 @@
       	<li class="answeroption answer2" data-answer="2">【２】 <span id="ans2"></span></li>
       	<li class="answeroption answer3" data-answer="3">【３】 <span id="ans3"></span></li>
       </ol>
+      <div class="inputs">
+        <label class="lab lab1" for="in1"> 1: </label><input id="in1" type="text" class="answerinput input1"><br>
+        <label class="lab lab2" for="in2"> 2: </label><input id="in2" type="text" class="answerinput input2"><br>
+        <label class="lab lab3" for="in3"> 3: </label><input id="in3" type="text" class="answerinput input3"><br>
+        <a id="put" class="gonext">回答する</a>
+      </div>
     </div>
     <div class="answerdescription">
       <span id="correct" class="noshow">正解！</span>
