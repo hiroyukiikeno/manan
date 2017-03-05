@@ -138,14 +138,16 @@
 	
 	/* stage score 初期表示 */
 	var score = 0;
-	$('#score').text(("000000" + score).slice(-6));
+	var fullscore = "000000";
+	$('#score').text(("000000" + score).slice(-6) + "/" + fullscore);
 	var ansnumber = "";
 	
 	/* 開始ボタン */
 	$('.startbtn').click(function(ev){
 		ev.preventDefault();
 		score = 0;
-		$('#score').text(("000000" + score).slice(-6));
+		fullscore = ("000000" + getFullScore()).slice(-6);
+		$('#score').text(("000000" + score).slice(-6) + "/" + fullscore);
 		qadata = getQAdata(qacount);
 		$('.startbtn').addClass('noshow');
 		displayQuiz();
@@ -170,7 +172,7 @@
 			$('.answerdescription').css('display','inline-block');
 			$('#gonext').fadeIn(3000);
 			$('.quiz1').fadeOut();
-			$('#score').text(("000000" + score).slice(-6));
+			$('#score').text(("000000" + score).slice(-6) + "/" + fullscore);
 		});
 	});
 	
@@ -209,7 +211,7 @@
 			$('.answerdescription').css('display','inline-block');
 			$('#gonext').fadeIn(3000);
 			$('.quiz1').fadeOut();
-			$('#score').text(("000000" + score).slice(-6));
+			$('#score').text(("000000" + score).slice(-6) + "/" + fullscore);
 		});
 	});
 	
@@ -241,6 +243,9 @@
 		$('#stage-name').text(userdata.stage);
 		qacount = 0;
 		retrieveQA();
+		score = 0;
+		fullscore = ("000000" + getFullScore()).slice(-6);
+		$('#score').text(("000000" + score).slice(-6) + "/" + fullscore);
 		$('.startbtn').removeClass('noshow');
 	});
 	
