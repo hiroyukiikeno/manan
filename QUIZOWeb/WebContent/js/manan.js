@@ -15,13 +15,88 @@
 	
 	var displayQuiz = function(){
 		
-		if(qadata.quizType == "ALT3"){
+		if(qadata.quizType == "ALT1"){
+			/* １択式クイズ用 */
+			$('#questionnumber').text(qadata["id"]);
+			$('#question').text(qadata["question"]);
+			$('.options').removeClass('noshow');
+			$('.inputs').addClass('noshow');
+			$('#ans1').text(qadata.answeroptions[0]);
+			$('.answer2').addClass('noshow');
+			$('.answer3').addClass('noshow');
+			$('.quiz1').animate({top:'16%'},100,function(){
+				$('.quiz1').css('display','inline-block');
+			});
+		} else if(qadata.quizType == "ALT2"){
+			/* ２択式クイズ用 */
+			$('#questionnumber').text(qadata["id"]);
+			$('#question').text(qadata["question"]);
+			$('.options').removeClass('noshow');
+			$('.inputs').addClass('noshow');
+			$('#ans1').text(qadata.answeroptions[0]);
+			$('#ans2').text(qadata.answeroptions[1]);
+			$('.answer2').removeClass('noshow');
+			$('.answer3').addClass('noshow');
+			$('.quiz1').animate({top:'16%'},100,function(){
+				$('.quiz1').css('display','inline-block');
+			});
+		} else if(qadata.quizType == "ALT3"){
 			/* ３択式クイズ用 */
 			$('#questionnumber').text(qadata["id"]);
 			$('#question').text(qadata["question"]);
+			$('.options').removeClass('noshow');
+			$('.inputs').addClass('noshow');
 			$('#ans1').text(qadata.answeroptions[0]);
 			$('#ans2').text(qadata.answeroptions[1]);
 			$('#ans3').text(qadata.answeroptions[2]);
+			$('.answer2').removeClass('noshow');
+			$('.answer3').removeClass('noshow');
+			$('.quiz1').animate({top:'16%'},100,function(){
+				$('.quiz1').css('display','inline-block');
+			});
+		} else if(qadata.quizType == "WRI1"){
+			/* １項目記入式クイズ用 */
+			$('#questionnumber').text(qadata["id"]);
+			$('#question').text(qadata["question"]);
+			$('.options').addClass('noshow');
+			$('.answerinput').val("");
+			$('.lab').addClass('noshow');
+			if(qadata.correctanswer != 0){ /* correctanswer == 0 の場合、番号ラベル表示しない */
+				$('.lab1').removeClass("noshow");
+			}
+			$('.inputs').removeClass('noshow');
+			$('.input2').addClass('noshow');
+			$('.input3').addClass('noshow');
+			$('.quiz1').animate({top:'16%'},100,function(){
+				$('.quiz1').css('display','inline-block');
+			});
+		} else if(qadata.quizType == "WRI2"){
+			/* ２項目記入式クイズ用 */
+			$('#questionnumber').text(qadata["id"]);
+			$('#question').text(qadata["question"]);
+			$('.options').addClass('noshow');
+			$('.answerinput').val("");
+			$('.lab1').removeClass("noshow");
+			$('.lab2').removeClass("noshow");
+			$('.lab3').addClass("noshow");
+			$('.inputs').removeClass('noshow');
+			$('.input2').removeClass('noshow');
+			$('.input3').addClass('noshow');
+			$('.quiz1').animate({top:'16%'},100,function(){
+				$('.quiz1').css('display','inline-block');
+			});
+		} else if(qadata.quizType == "WRI3"){
+			/* ３項目記入式クイズ用 */
+			$('#questionnumber').text(qadata["id"]);
+			$('#question').text(qadata["question"]);
+			$('.options').addClass('noshow');
+			$('.answerinput').val("");
+			$('.lab1').removeClass("noshow");
+			$('.lab2').removeClass("noshow");
+			$('.lab3').removeClass("noshow");
+			$('.inputs').removeClass('noshow');
+			$('.input2').removeClass('noshow');
+			$('.input3').removeClass('noshow');
 			$('.quiz1').animate({top:'16%'},100,function(){
 				$('.quiz1').css('display','inline-block');
 			});
@@ -63,14 +138,16 @@
 	
 	/* stage score 初期表示 */
 	var score = 0;
-	$('#score').text(("000000" + score).slice(-6));
+	var fullscore = "000000";
+	$('#score').text(("000000" + score).slice(-6) + "/" + fullscore);
 	var ansnumber = "";
 	
 	/* 開始ボタン */
 	$('.startbtn').click(function(ev){
 		ev.preventDefault();
 		score = 0;
-		$('#score').text(("000000" + score).slice(-6));
+		fullscore = ("000000" + getFullScore()).slice(-6);
+		$('#score').text(("000000" + score).slice(-6) + "/" + fullscore);
 		qadata = getQAdata(qacount);
 		$('.startbtn').addClass('noshow');
 		displayQuiz();
@@ -86,27 +163,72 @@
 			console.log("correct");
 			$('#correct').removeClass('noshow');
 			score++;
+			oxs[qadata.id] = 1;
 		} else {
 			console.log("wrong");
 			$('#wrong').removeClass('noshow');
+			oxs[qadata.id] = 0;
 		}
 		$('#description').text(qadata.description);
 		$('.answerdescription').animate({top:'14%'},100,function(){
 			$('.answerdescription').css('display','inline-block');
 			$('#gonext').fadeIn(3000);
 			$('.quiz1').fadeOut();
-			$('#score').text(("000000" + score).slice(-6));
+			$('#score').text(("000000" + score).slice(-6) + "/" + fullscore);
+		});
+	});
+	
+	/* 記入式の答え回答 */
+	$('#put').click(function(ev){
+		ev.preventDefault();
+		let ok = false;
+		console.log("expected answers: " + qadata.answeroptions[0] + ", " + qadata.answeroptions[1] + ", " + qadata.answeroptions[2]);
+		let inp1 = $('#in1').val();
+		let inp2 = $('#in2').val();
+		let inp3 = $('#in3').val();
+		console.log("answer input: " + inp1 + ", " + inp2 + ", " + inp3);
+		let answers = [inp1,inp2,inp3];
+		stageresults[qadata.id] = answers;
+		if(qadata.quizType == "WRI3"){
+			if(qadata.answeroptions[0] == inp1 && qadata.answeroptions[1] == inp2 && qadata.answeroptions[2] == inp3){
+				ok = true;
+			}
+		} else if (qadata.quizType == "WRI2"){
+			if(qadata.answeroptions[0] == inp1 && qadata.answeroptions[1] == inp2){
+				ok = true;
+			}
+		} else if (qadata.quizType == "WRI1"){
+			if(qadata.answeroptions[0] == inp1){
+				ok = true;
+			}
+		}
+		if(ok){
+			console.log("correct");
+			$('#correct').removeClass('noshow');
+			score++;
+			oxs[qadata.id] = 1;
+		} else {
+			console.log("wrong");
+			$('#wrong').removeClass('noshow');
+			oxs[qadata.id] = 0;
+		}
+		$('#description').text(qadata.description);
+		$('.answerdescription').animate({top:'14%'},100,function(){
+			$('.answerdescription').css('display','inline-block');
+			$('#gonext').fadeIn(3000);
+			$('.quiz1').fadeOut();
+			$('#score').text(("000000" + score).slice(-6) + "/" + fullscore);
 		});
 	});
 	
 	/* 「次へ」を押したら : 表示初期化＆次の質問 */
 	$('#gonext').click(function(evt){
 		evt.preventDefault();
-		if(qadata.correctanswer == ansnumber){
+		//if(qadata.correctanswer == ansnumber){
 			$('#correct').addClass('noshow');
-		} else {
+		//} else {
 			$('#wrong').addClass('noshow');
-		}
+		//}
 		$('.answerdescription').css('display','none');
 		$('#gonext').css('display','none');
 		qadata = getQAdata(qacount);
@@ -126,7 +248,12 @@
 		$('.stagecomplete').fadeOut();
 		$('#stage-name').text(userdata.stage);
 		qacount = 0;
+		stageresults = {};
+		oxs = {};
 		retrieveQA();
+		score = 0;
+		fullscore = ("000000" + getFullScore()).slice(-6);
+		$('#score').text(("000000" + score).slice(-6) + "/" + fullscore);
 		$('.startbtn').removeClass('noshow');
 	});
 	
@@ -135,6 +262,8 @@
 		ev.preventDefault();
 		$('.stagecomplete').fadeOut();
 		qacount = 0;
+		stageresults = {};
+		oxs = {};
 		$('.startbtn').removeClass('noshow');
 	});
 	

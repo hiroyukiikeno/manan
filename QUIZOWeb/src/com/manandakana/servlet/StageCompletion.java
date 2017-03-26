@@ -52,13 +52,14 @@ public class StageCompletion extends HttpServlet {
 			String userAnswers = request.getParameter("useranswers");
 			String starttime = request.getParameter("start");
 			String endtime = request.getParameter("end");
+			String oxs = request.getParameter("oxs");
 			
 			int score = Integer.parseInt(sco);
 			Timestamp startTime = new Timestamp(Long.parseLong(starttime));
 			Timestamp endTime = new Timestamp(Long.parseLong(endtime));
 			
 			StageData completedStageData = quizService.getStage(courseId, stage);
-			UserData userData = userService.updateUserOnStageCompletion(userid, courseId, stage, score, userAnswers, startTime, endTime);
+			UserData userData = userService.updateUserOnStageCompletion(userid, courseId, stage, score, userAnswers, startTime, endTime, oxs);
 			NextStageInfo nextStageInfo;
 			
 			if(completedStageData.getCourseCompletion() == 1 && !userData.getStage().equals(stage)){

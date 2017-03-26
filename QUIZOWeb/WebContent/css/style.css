@@ -19,7 +19,7 @@
 
 html {padding: 0px; margin: 0px; height: 100%;}
 body {padding: 0px; margin: 0px; height: 100%; font-family: 'Meiryo UI','Hiragino Kaku Gothic Pro',sans-serif;}
-input, select{border-radius: 5px; background-color: #eb8ee9; margin: 0% auto 0%;}
+input, select{border-radius: 5px; background-color: #f7f7ba; margin: 0% auto 0%;}
 
 /* google icon font size adjust */
 .icon-font{font-size: 1.2rem; vertical-align:bottom;}
@@ -361,7 +361,16 @@ input, select{border-radius: 5px; background-color: #eb8ee9; margin: 0% auto 0%;
 }
 .gonext:hover{
 	background-color: #dc56e3;
+	cursor: pointer;
 }
+
+#put{
+	float:right;
+}
+.answerinput{
+	font-size: 1em;
+}
+
 
 /* bottom area */
 .message{

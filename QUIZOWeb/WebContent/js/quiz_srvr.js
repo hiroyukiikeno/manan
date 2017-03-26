@@ -3,6 +3,7 @@
  */
 var qadataall = [];
 var stageresults = {};
+var oxs = {};
 var starttime = 0;
 var endtime = 0;
 var userdata = {};
@@ -98,9 +99,21 @@ var getQAdata = function(qacount){
 	return ret;
 };
 
+/* ステージのクイズ数を返す（アンケートを含めないで数える） */
+var getFullScore = function(){
+	let count = 0;
+	for (var ix in qadataall){
+		if(qadataall[ix].quizType != "QNRE"){
+			count++;
+		}
+	}
+	return count;
+};
+
+
 /* log stage completion and retrieve next stage */
 var onStageCompletion = function(score){
-	var parm = {score: score, useranswers: JSON.stringify(stageresults), start: starttime, end: endtime};
+	var parm = {score: score, useranswers: JSON.stringify(stageresults), start: starttime, end: endtime, oxs: JSON.stringify(oxs)};
 	var nextStageName = "";
 	$('#spinbackground').addClass('grgrbg');
 	$('#spin').addClass('grgr');

@@ -17,6 +17,9 @@ import com.manandakana.dao.UserDAO;
 import com.manandakana.dto.CourseData;
 import com.manandakana.dto.UserCourseData;
 import com.manandakana.dto.UserData;
+import com.manandakana.util.UserAnswer;
+import com.manandakana.util.UserAnswerParser;
+import com.manandakana.util.UserAnswerParserException;
 
 /**
  * Session Bean implementation class UserService
@@ -80,7 +83,7 @@ public class UserService {
 
     }
     
-    public UserData updateUserOnStageCompletion(String userid, String courseId, String stage, int score, String userAnswers, Timestamp starttime, Timestamp endtime){
+    public UserData updateUserOnStageCompletion(String userid, String courseId, String stage, int score, String userAnswers, Timestamp starttime, Timestamp endtime, String oxs){
     	
     	UserData ret = null;
     	StagesDAO stagesDAO = DAOFactory.getInstance().getStagesDAO();
@@ -95,8 +98,17 @@ public class UserService {
     	
     	
     	try {
-    		userAnswersDAO.logUserAnswers(logUser, userAnswers, starttime, endtime);
     		
+    		// record user answers in USER_ANSWER_EACH ( or in USER_ANSWERS for unexpected format )
+    		try{
+    			UserAnswerParser uap = new UserAnswerParser();
+    			Vector<UserAnswer> userAnswersList = uap.getUserAnswerList(userAnswers, oxs);
+    			userAnswersDAO.logUserAnswerEach(logUser, userAnswersList, starttime, endtime);
+    		} catch (UserAnswerParserException ue) {
+    			userAnswersDAO.logUserAnswers(logUser, userAnswers, starttime, endtime);
+    		}
+    		
+    		// get the next stage, add bonus, and return the updated user data
     		String nextStage = stagesDAO.getNextStage(courseId, stage, score);
     		
     		int oldScore = userDAO.getScore(userid);
