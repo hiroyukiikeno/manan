@@ -32,6 +32,8 @@ public class ParameterProperties {
 			case "useranswers":
 			case "comment":
 				return 12000;
+			case "oxs":
+				return 1200;
 			case "answer1":
 			case "answer2":
 			case "answer3":

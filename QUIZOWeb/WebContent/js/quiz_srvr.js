@@ -3,6 +3,7 @@
  */
 var qadataall = [];
 var stageresults = {};
+var oxs = {};
 var starttime = 0;
 var endtime = 0;
 var userdata = {};
@@ -112,7 +113,7 @@ var getFullScore = function(){
 
 /* log stage completion and retrieve next stage */
 var onStageCompletion = function(score){
-	var parm = {score: score, useranswers: JSON.stringify(stageresults), start: starttime, end: endtime};
+	var parm = {score: score, useranswers: JSON.stringify(stageresults), start: starttime, end: endtime, oxs: JSON.stringify(oxs)};
 	var nextStageName = "";
 	$('#spinbackground').addClass('grgrbg');
 	$('#spin').addClass('grgr');

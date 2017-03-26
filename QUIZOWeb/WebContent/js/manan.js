@@ -163,9 +163,11 @@
 			console.log("correct");
 			$('#correct').removeClass('noshow');
 			score++;
+			oxs[qadata.id] = 1;
 		} else {
 			console.log("wrong");
 			$('#wrong').removeClass('noshow');
+			oxs[qadata.id] = 0;
 		}
 		$('#description').text(qadata.description);
 		$('.answerdescription').animate({top:'14%'},100,function(){
@@ -185,6 +187,8 @@
 		let inp2 = $('#in2').val();
 		let inp3 = $('#in3').val();
 		console.log("answer input: " + inp1 + ", " + inp2 + ", " + inp3);
+		let answers = [inp1,inp2,inp3];
+		stageresults[qadata.id] = answers;
 		if(qadata.quizType == "WRI3"){
 			if(qadata.answeroptions[0] == inp1 && qadata.answeroptions[1] == inp2 && qadata.answeroptions[2] == inp3){
 				ok = true;
@@ -202,9 +206,11 @@
 			console.log("correct");
 			$('#correct').removeClass('noshow');
 			score++;
+			oxs[qadata.id] = 1;
 		} else {
 			console.log("wrong");
 			$('#wrong').removeClass('noshow');
+			oxs[qadata.id] = 0;
 		}
 		$('#description').text(qadata.description);
 		$('.answerdescription').animate({top:'14%'},100,function(){
@@ -242,6 +248,8 @@
 		$('.stagecomplete').fadeOut();
 		$('#stage-name').text(userdata.stage);
 		qacount = 0;
+		stageresults = {};
+		oxs = {};
 		retrieveQA();
 		score = 0;
 		fullscore = ("000000" + getFullScore()).slice(-6);
@@ -254,6 +262,8 @@
 		ev.preventDefault();
 		$('.stagecomplete').fadeOut();
 		qacount = 0;
+		stageresults = {};
+		oxs = {};
 		$('.startbtn').removeClass('noshow');
 	});
 	
