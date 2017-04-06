@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.ValidationException;
 
+import com.manandakana.dto.CourseData;
 import com.manandakana.dto.UserData;
+import com.manandakana.ejb.QuizService;
 import com.manandakana.ejb.UserService;
 import com.manandakana.util.ResponseInfo;
 
@@ -23,6 +25,12 @@ public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	@EJB
 	private UserService userService;
+	
+	@EJB
+	private QuizService quizService;
+	
+	private String ACC_REQUIRED = "ACC_REQUIRED";
+	private String ACC_NOT_REQUIRED = "";
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -32,10 +40,52 @@ public class LoginServlet extends HttpServlet {
     }
 
 	/**
-	 * Login to the course. if ok return data including course and stage.
+	 * Login to the course directly by URL parameter. User should have been authenticated on the root page
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		String userid = (String)session.getAttribute("userid");
+		String username = (String)session.getAttribute("username");
+		String courseId = request.getParameter("course");
+		try {
+			if(userid != null && !userid.equals("") && username != null && courseId != null && !courseId.equals("")){
+				CourseData courseData = quizService.getCourse(courseId);
+				if(courseData == null){
+					request.getRequestDispatcher("/courselist").forward(request, response);
+					return;
+				}
+				if(userService.isCourseAccessValid(userid, courseId, "")){
+					session.setAttribute("acccodereq", ACC_NOT_REQUIRED);
+				} else {
+					session.setAttribute("acccodereq", ACC_REQUIRED);
+				}
+				
+				session.setAttribute("course_id", courseId);
+				request.setAttribute("coursename", courseData.getCourseName());
+				request.getRequestDispatcher("/jsp/manan.jsp").forward(request, response);
+				return;
+				
+				
+			} else {
+				System.err.println("the session does not contain information to start application");
+				response.sendRedirect("/");
+				return;
+			}
+		} catch (ValidationException ve){
+			System.err.println("validation error occured to couse start validation request");
+			ve.printStackTrace();
+			response.sendRedirect("/");
+			return;
+		}
+		
+	}
+
+	/**
+	 * Login to the course. if ok return data including course and stage.
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		response.setContentType("application/json charset=UTF-8");
 		try {
@@ -46,9 +96,11 @@ public class LoginServlet extends HttpServlet {
 			String sessionUserid = (String)session.getAttribute("userid");
 			String sessionUsername = (String)session.getAttribute("username");
 			
+			String acccodereq = (String)session.getAttribute("acccodereq");
 			
 			if(!sessionUserid.equals(userid)){
-				System.out.println("userid changed. session userid " + sessionUserid + " will be updated to " + userid);
+				response.sendRedirect("/");
+				return;
 			}
 			
 			String username = "";
@@ -56,6 +108,20 @@ public class LoginServlet extends HttpServlet {
 				username = sessionUsername;
 			} else {
 				username = userid;
+			}
+			
+			if(ACC_REQUIRED.equals(acccodereq)){
+				String acccode = request.getParameter("acccode");
+				if( !userService.isCourseAccessValid(userid, courseId, acccode)){
+					// failure case
+					ResponseInfo responseInfo = new ResponseInfo();
+					responseInfo.setStatus("NG");
+					responseInfo.setMessage("COURSE_ACCESS_INVALID");
+					response.getWriter().append(responseInfo.toJSONString());
+					return;
+				} else {
+					session.removeAttribute("acccodereq");
+				}
 			}
 			
 			if(userid != null && !userid.equals("") && courseId != null && !courseId.equals("")){
@@ -89,14 +155,6 @@ public class LoginServlet extends HttpServlet {
 			response.getWriter().append(responseInfo.toJSONString());
 			return;
 		}
-		
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
 	}
 
 }

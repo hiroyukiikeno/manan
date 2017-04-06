@@ -6,6 +6,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
 import com.manandakana.dao.CourseDAO;
+import com.manandakana.dao.DAOException;
 import com.manandakana.dao.DAOFactory;
 import com.manandakana.dao.QuizDAO;
 import com.manandakana.dao.StagesDAO;
@@ -39,6 +40,18 @@ public class QuizService {
     public Vector<CourseData> getCourses(){
     	CourseDAO courseDAO = DAOFactory.getInstance().getCourseDAO();
     	return courseDAO.getCourses();
+    }
+    
+    public CourseData getCourse(String courseId){
+    	CourseDAO courseDAO = DAOFactory.getInstance().getCourseDAO();
+    	try {
+    		CourseData courseData = courseDAO.getCourse(courseId);
+    		return courseData;
+    	} catch (DAOException e){
+    		return null;
+    	}
+    	
+    	
     }
     
 

@@ -52,6 +52,7 @@
       $('input[name="uname"]').prop("disabled",true);
       window.setTimeout(doLogin,20000);
     } else {
+      $('#uname').val("");
       $('.signin').removeClass("noshow");
     }
     $('#signinbtn').click(function(ev){

@@ -220,7 +220,6 @@ input, select{border-radius: 5px; background-color: #f7f7ba; margin: 0% auto 0%;
 	left: 20%;
 	margin: 10% auto 10%;
 	padding: 10px;
-	height: 200px;
 	width: 70%;
 	max-width: 200px;
 	border-radius: 10px;
@@ -229,8 +228,8 @@ input, select{border-radius: 5px; background-color: #f7f7ba; margin: 0% auto 0%;
 }
 #pswd{display: none;}
 #signinbtn{
-	position: absolute;
-	bottom: 5%;
+	position: relative;
+	float: right;
 	right: 5%;
 	min-width: 30px;
 	padding: 7px;
@@ -240,6 +239,15 @@ input, select{border-radius: 5px; background-color: #f7f7ba; margin: 0% auto 0%;
 	text-decoration: none;
 	color: #090909;
 	cursor: pointer;
+}
+.signin::after{
+	clear: both;
+}
+#accesscode{
+	margin-bottom: 20px;
+}
+#logininfo{
+	display: none;
 }
 #signinbtn:hover{
 	background-color: #50b643;

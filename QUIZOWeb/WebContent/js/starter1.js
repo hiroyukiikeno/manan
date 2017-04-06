@@ -11,12 +11,14 @@ function doLogin(){
 	console.log("logging in ...");
 	$('#spinbackground').addClass('grgrbg');
 	$('#spin').addClass('grgr');
+	let ok = false;
 	var promise = $.ajax(
 		{
 			url:'/Starter',
 			method: 'POST',
 			data: {userid:$('input[name="uname"]').val(), username:$('input[name="nname"]').val()},
 			success: function(response){
+				ok = true;
 				console.log("login successful");
 			},
 			error: function(e){
@@ -25,8 +27,10 @@ function doLogin(){
 		}	
 	);
 	promise.done(function(){
-		console.log("moving to: " + locat);
-		seni();
+		if(ok){
+			console.log("moving to: " + locat);
+			seni();
+		}
 	});
 	promise.fail(function(){
 		$('#spin').removeClass('grgr');

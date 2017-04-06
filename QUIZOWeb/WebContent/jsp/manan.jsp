@@ -16,7 +16,7 @@
   <div class="pane-c">
     <div class="obj-c"><img src="/img/cloudshape.png"/></div>
     <div class="obj-c2"><img src="/img/cloudshape.png"/></div>
-    <p id="course-name" class="text1"></p>
+    <p id="course-name" class="text1">${coursename}</p>
     <p id="stage-name" class="text1"></p>
     <div class="userinfo">${username}<span id="listlink" class="listlink">&nbsp;<i class="material-icons icon-font icon-font-listmenu">list</i></span></div>
     <div class="info-line-2">
@@ -24,9 +24,13 @@
     </div>
     <div class="signin noshow">
       <form>
-        <label for="uname">your e-mail : </label><input type="email" name="uname" id="uname" autofocus placeholder="xxxx@yy.com" autocomplete="email" value="${userid}"><br/>
-        <label for="course">course : </label><select name="course"><option>${course_id}</option></select>
-        <a id="signinbtn" href="#">Start your study</a>
+        <div id="logininfo">
+          <label for="uname">your e-mail : </label><input type="email" name="uname" id="uname" readonly value="${userid}"><br/>
+          <label for="course">course : </label><select name="course"><option>${course_id}</option></select><br/>
+        </div>
+        <span id="accmessage" class="noshow">正しい確認コードを入力してください。<br/></span>
+        <label for="accesscode">access code : </label><input type="text" name="accesscode" id="accesscode" data-acccode-required="${acccodereq}" autofocus>
+        <a id="signinbtn" href="#">Start the Course</a>
       </form>
     </div>
     <div class="startbtn noshow">Start the stage</div>

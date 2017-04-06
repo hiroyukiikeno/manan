@@ -12,10 +12,11 @@ var userdata = {};
 var loginToQuiz = function(){
 	$('#spinbackground').addClass('grgrbg');
 	$('#spin').addClass('grgr');
-	let parms = {userid:$('input[name="uname"]').val(), course:$('select[name="course"]').val()};
+	let parms = {userid:$('input[name="uname"]').val(), course:$('select[name="course"]').val(), acccode: $('#accesscode').val()};
 	var promise = $.ajax(
 	  {
-		url: '/LoginServlet',
+		url: '/login',
+		type: 'POST',
 		data: parms,
 		success: function(response){
 			console.log(response);
@@ -24,7 +25,10 @@ var loginToQuiz = function(){
 				$('#course-name').text(userdata.courseName);
 				$('#stage-name').text(userdata.stage);
 				console.log("Login Success");
+				$('#accmessage').addClass('noshow');
 				retrieveQA();
+			} else if(userdata.message == "COURSE_ACCESS_INVALID") {
+				$('#accmessage').removeClass('noshow');
 			} else {
 				$('.message').text("Login Failed");
 			}
@@ -70,6 +74,7 @@ var retrieveQA = function(){
 	);
 	promise.done(function(){
 		if(qadataall.length > 0){
+			$('.signin').addClass("noshow");
 			$('.startbtn').removeClass('noshow');
 		}
 	});

@@ -26,15 +26,35 @@ public class Starter extends HttpServlet {
     }
 
 	/**
+	 * Show Login Page (usually not used)
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.getRequestDispatcher("/index.jsp").forward(request, response);
+		return;
+	}
+
+	/**
+	 * User login as API
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		response.setContentType("application/json charset=UTF-8");
 		ResponseInfo respInfo = new ResponseInfo();
 		try{
 			String userid = request.getParameter("userid");
 			String username = request.getParameter("username");
+			if(userid == null || userid.equals("")){
+				respInfo.setStatus("NG");
+				respInfo.setMessage("USERID_NOT_SPECIFIED");
+				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+				response.getWriter().append(respInfo.toJSONString());
+				return;
+			}
+			if(username == null || username.equals("")){
+				username = userid;
+			}
 			session.setAttribute("userid", userid);
 			session.setAttribute("username", username);
 			respInfo.setStatus("OK");
@@ -44,17 +64,10 @@ public class Starter extends HttpServlet {
 			ve.printStackTrace();
 			respInfo.setStatus("NG");
 			respInfo.setMessage("VALIDATION_ERROR");
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			response.getWriter().append(respInfo.toJSONString());
 			return;
 		}
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		doGet(request, response);
 	}
 
 }

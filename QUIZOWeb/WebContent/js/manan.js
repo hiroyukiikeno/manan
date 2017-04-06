@@ -125,16 +125,22 @@
 	}
 	
 	/* 認証されていれば自動ログイン */
-	if($('#uname').val() != "" && $('#uname').val() != "null" && $('select[name="course"]').val() != ""){
+	if($('#uname').val() != "" && $('#uname').val() != "null" && $('select[name="course"]').val() != "" && !$('#accesscode').data("acccode-required")){
 		console.log("automatic login to course : " + $('select[name="course"]').val());
 		$('.signin').addClass("noshow");
 		loginToQuiz();
-		if(qadataall.length > 0){
-			$('.startbtn').removeClass('noshow');
-		}
+//		if(qadataall.length > 0){
+//			$('.startbtn').removeClass('noshow');
+//		}
 	} else {
 		$('.signin').removeClass('noshow');
 	}
+	
+	/* 手動ログイン */
+	$('#signinbtn').click(function(ev){
+		$('#accmessage').addClass('noshow');
+		loginToQuiz();
+	});
 	
 	/* stage score 初期表示 */
 	var score = 0;
