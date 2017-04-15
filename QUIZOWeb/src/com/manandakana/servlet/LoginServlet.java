@@ -40,7 +40,7 @@ public class LoginServlet extends HttpServlet {
     }
 
 	/**
-	 * Login to the course directly by URL parameter. User should have been authenticated on the root page
+	 * Login to the course directly by URL parameter. Forwards or redirects to a page according to parameters
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -49,6 +49,8 @@ public class LoginServlet extends HttpServlet {
 		String username = (String)session.getAttribute("username");
 		String courseId = request.getParameter("course");
 		try {
+			
+			// User have logged in and course id is specified
 			if(userid != null && !userid.equals("") && username != null && courseId != null && !courseId.equals("")){
 				CourseData courseData = quizService.getCourse(courseId);
 				if(courseData == null){
@@ -66,8 +68,17 @@ public class LoginServlet extends HttpServlet {
 				request.getRequestDispatcher("/jsp/manan.jsp").forward(request, response);
 				return;
 				
-				
+			// User have not logged in
 			} else {
+				// if course id is specified, move to user login page
+				if(courseId != null && !courseId.equals("")){
+					CourseData courseData = quizService.getCourse(courseId);
+					if(courseData == null){
+						session.setAttribute("course_id", courseId);
+					}
+					request.getRequestDispatcher("/index.jsp").forward(request, response);
+					return;
+				}
 				System.err.println("the session does not contain information to start application");
 				response.sendRedirect("/");
 				return;
@@ -82,7 +93,7 @@ public class LoginServlet extends HttpServlet {
 	}
 
 	/**
-	 * Login to the course. if ok return data including course and stage.
+	 * API: Login to the course. if ok return data including course and stage.
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

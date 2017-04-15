@@ -1,7 +1,7 @@
 /**
  * Global variables and functions for index.jsp
  */
-var locat = "/CourseList";
+
 var emailptn = /^[a-zA-Z0-9._-]{1,128}@[a-zA-Z0-9._-]/;
 
 /**
@@ -28,7 +28,6 @@ function doLogin(){
 	);
 	promise.done(function(){
 		if(ok){
-			console.log("moving to: " + locat);
 			seni();
 		}
 	});
@@ -38,5 +37,11 @@ function doLogin(){
 }
 
 function seni(){
+	let locat = "/CourseList";
+	let q = window.location.search;
+	if(q){
+		locat = "/login" +  q;
+	}
+	console.log("moving to: " + locat);
 	window.location.href = locat;
 }
