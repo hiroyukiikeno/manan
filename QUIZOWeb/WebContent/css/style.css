@@ -8,11 +8,11 @@
 	0% {right: 0%;}
 	100%{right: 100%;}
 }
-@-webkit-keyframes mycloud3{
+@keyframes mycloud3{
 	0% {right: 0%;}
 	100%{right: 100%;}
 }
-@-webkit-keyframes mycloud4{
+@keyframes mycloud4{
 	0% {right: 0%;}
 	100%{right: 100%;}
 }
