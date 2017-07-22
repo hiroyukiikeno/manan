@@ -117,7 +117,7 @@ public class StageData implements Serializable {
 		sb.append(",\"sequence\":").append(sequence);
 		sb.append(",\"stage\":\"").append(stage).append("\"");
 		sb.append(",\"nextStage\":\"").append(nextStage).append("\"");
-		sb.append(",\"courseCompletion\":\"").append(courseCompletion);
+		sb.append(",\"courseCompletion\":").append(courseCompletion);
 		sb.append(",\"passMark\":").append(passMark);
 		sb.append(",\"completionBonus\":").append(completionBonus);
 		sb.append(",\"description\":\"").append(description).append("\"");

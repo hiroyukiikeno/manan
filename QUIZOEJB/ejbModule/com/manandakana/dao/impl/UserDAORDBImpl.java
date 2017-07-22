@@ -17,6 +17,7 @@ public class UserDAORDBImpl extends DAOBase implements UserDAO {
 	private static final String UPDATE_COURSE_SQL = "update USERDATA set course_id = ?, update_time=? where userid = ? and course_id = ?";
 	private static final String GET_USER_SCORE_SQL = "select max(score) as userscore from USERDATA where userid = ?";
 	private static final String UPDATE_SCORE_SQL = "update USERDATA set score = ?, update_time=? where userid = ? and course_id = ? and stage = ?";
+	private static final String UPDATE_STAGE_SQL = "update USERDATA set stage = ?, update_time=? where userid = ? and course_id = ?";
 
 	@Override
 	public UserData getUserData(String userId, String courseId) throws DAOException {
@@ -212,6 +213,37 @@ public class UserDAORDBImpl extends DAOBase implements UserDAO {
 			pStatement.setString(3, userId);
 			pStatement.setString(4, courseId);
 			pStatement.setString(5, stage);
+			pStatement.executeUpdate();
+			pStatement.close();
+		} catch (SQLException se){
+			throw new DAOException(se);
+		} catch (DAOException de){
+			throw de;
+		} catch (Exception e){
+			e.printStackTrace();
+			throw new DAOException("unhandled error occured updating user data");
+		} finally {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new DAOException("unhandled error occured when closing connection");
+			}
+		}
+
+	}
+	
+	@Override
+	public void updateStage(String userId, String courseId, String stage) throws DAOException {
+		Connection connection = null;
+		PreparedStatement pStatement = null;
+		try {
+			connection = getConnection();
+			pStatement = connection.prepareStatement(UPDATE_STAGE_SQL);
+			pStatement.setString(1,stage);
+			pStatement.setTimestamp(2, getCurrentTimestamp());
+			pStatement.setString(3, userId);
+			pStatement.setString(4, courseId);
 			pStatement.executeUpdate();
 			pStatement.close();
 		} catch (SQLException se){

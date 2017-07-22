@@ -118,7 +118,7 @@ input, select{border-radius: 5px; background-color: #f7f7ba; margin: 0% auto 0%;
 .userinfo:after{
 	clear: both;
 }
-#listlink:hover{
+.golistlink:hover{
 	cursor: pointer;
 }
 
@@ -341,7 +341,6 @@ input, select{border-radius: 5px; background-color: #f7f7ba; margin: 0% auto 0%;
 	padding-bottom: 18px;
 	text-align: center;
 	color: #fff;
-	display: none;
 }
 .noshow{
 	display:none;
@@ -379,6 +378,84 @@ input, select{border-radius: 5px; background-color: #f7f7ba; margin: 0% auto 0%;
 	font-size: 1em;
 }
 
+#stagelist-box{
+	position: absolute;
+	left: 10%;
+	top: 30%;
+	line-height: 180%;
+	background-color: #b6f0f6;
+	border-width: medium;
+	border-color: #c48e8a;
+	border-radius: 10px;
+	width: 75%;
+	z-index: 200;
+}
+#close-btn::before{
+	position: absolute;
+	top:-5px;
+	left:5px;
+	content: 'X';
+	font-size: 10px;
+	vertical-align: top;
+	color: #797779;
+}
+#close-btn{
+	position: absolute;
+	top:3px;
+	left:3px;
+	width: 18px;
+	height: 18px;
+	padding: 0px;
+	border-radius: 35%;
+	background-color: #c5e3e3;
+	border: 0.5px solid #c1c7c8;
+	text-align: center;
+}
+#close-btn:hover{
+	cursor: pointer;
+	background-color: #b9d5d5;
+}
+
+#stagelist{
+	min-height: 30px;
+	max-height: 200px;
+	overflow: scroll;
+	padding: 12px;
+}
+.stage-item{
+	font-size: 0.8em;
+	position: relative;
+	background-color: #cef2e5;
+	border-width: 5px;
+	border-radius: 10px;
+	border-color: #7ad997;
+	width: 90%;
+	min-height: 10px;
+	padding: 6px 1em;
+	margin: 15px; auto;
+}
+.stage-name{
+	font-family:'Comic Sans MS';
+}
+.stage-rerun-btn{
+	position: relative;
+	left: 1px;
+	bottom: 2px;
+	height: 1.5em;
+	min-width: 30px;
+	padding: 2px 1em;
+	background-color: #eaf4e7;
+	margin: 3px;
+	border-radius: 10px;
+	text-decoration: none;
+	color: #546673;
+	cursor: pointer;
+	box-shadow: 0.7px 0.7px 0.7px #d2dacf;
+}
+.stage-rerun-btn:hover{
+	background-color: #fae59b;
+	box-shadow: 0.4px 0.4px 0.4px #d2dacf;
+}
 
 /* bottom area */
 .message{

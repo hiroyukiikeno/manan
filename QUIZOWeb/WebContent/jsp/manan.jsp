@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
 <link rel="shortcut icon" href="/img/favicon.ico">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="/css/style.css">
@@ -18,7 +18,7 @@
     <div class="obj-c2"><img src="/img/cloudshape.png"/></div>
     <p id="course-name" class="text1">${coursename}</p>
     <p id="stage-name" class="text1"></p>
-    <div class="userinfo">${username}<span id="listlink" class="listlink">&nbsp;<i class="material-icons icon-font icon-font-listmenu">list</i></span></div>
+    <div class="userinfo">${username}<span id="listlink" class="listlink golistlink">&nbsp;<i class="material-icons icon-font icon-font-listmenu">list</i></span></div>
     <div class="info-line-2">
       <p class="text3">stage score : <span id="score"></span></p>
     </div>
@@ -55,16 +55,19 @@
       <p id="description"></p>
       <a href="#" id="gonext" class="gonext noshow">次へ</a>
     </div>
-    <div class="stagecomplete">
+    <div class="stagecomplete noshow">
       <p id="passed" class="noshow">おつかれさまでした！<br/>ステージをクリアしました。</p>
       <p id="notpassed" class="noshow">おつかれさまでした。<br/>でもこのステージはまだクリアできていません。<br/>クリアできるまで繰り返しがんばりましょう！</p>
       <a href="#" id="gotonextstage" class="gonext noshow"><i class="material-icons icon-font">mood</i>&nbsp;次のステージへ&nbsp;<i class="material-icons icon-font">call_made</i></a>
       <a href="#" id="returntostart" class="gonext noshow"><i class="material-icons icon-font">replay</i>&nbsp;ステージの最初に戻る</a>
-      <p id="stagenotready" class="noshow">The next stage is not ready. <br/>come again soon!</p>
+      <p id="stagenotready" class="noshow">次のステージは準備中です。<br/>クリアしたステージの再実行ができますよ。<br/><br/>
+        <a href="#" id="stagelistbtn" class="gonext listlink"><span id="stageslistlink">&nbsp;<i class="material-icons icon-font">local_movies</i>ステージ一覧表示</span></a><br/><br/>
+        <a href="#" id="listlink2" class="gonext listlink"><span class="golistlink">&nbsp;<i class="material-icons icon-font">list</i>コース一覧へ</span></a>
+      </p>
       <p id="coursecomplete" class="noshow">これでコース完了です！<br/>
         <i class="material-icons icon-font icon-font-listmenu">pets</i><br/>
         やったねー<br/><br/><br/>
-        <a href="#" id="listlink2" class="gonext listlink"><span id="listlink">&nbsp;<i class="material-icons icon-font">list</i>コース一覧へ</span></a>
+        <a href="#" id="listlink3" class="gonext listlink"><span class="golistlink">&nbsp;<i class="material-icons icon-font">list</i>コース一覧へ</span></a>
       </p>
     </div>
     <div id="questionnaire" class="noshow">
@@ -105,6 +108,11 @@
         <br/>
         <a class="submitbtn">アンケートの回答を提出</a>  
       </form>
+    </div>
+    <div id="stagelist-box" class="noshow">
+      <div id="close-btn"></div>
+      <div id="stagelist">
+      </div>
     </div>
   </div>
   <p class="message"></p>

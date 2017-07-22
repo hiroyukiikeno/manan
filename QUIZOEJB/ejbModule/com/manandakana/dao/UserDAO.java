@@ -15,5 +15,7 @@ public interface UserDAO {
 	public int getScore(String userId) throws DAOException;
 	
 	public void updateScore(String userId, String courseId, String stage, int newScore) throws DAOException;
+	
+	public void updateStage(String userId, String courseId, String stage) throws DAOException;
 
 }

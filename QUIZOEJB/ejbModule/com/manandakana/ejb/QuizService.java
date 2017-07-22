@@ -37,6 +37,22 @@ public class QuizService {
     	return stagesDAO.getStage(courseId, stage);
     }
     
+    public Vector<StageData> getStagesBefore(String courseId, String stage){
+    	StagesDAO stagesDAO = DAOFactory.getInstance().getStagesDAO();
+    	try{
+    		StageData currentStage = stagesDAO.getPreviousStage(courseId, stage);
+    		int seq = currentStage.getSequence();
+    		Vector<StageData> v = stagesDAO.getStages(courseId, seq);
+    		System.out.println("course id: " + courseId + "  stage: " + stage);
+    		System.out.println("current seq no of the stage: " + seq + "  number of stages before: " + v.size());
+        	return stagesDAO.getStages(courseId, currentStage.getSequence());
+    	} catch (DAOException e){
+    		e.printStackTrace();
+    		return null;
+    	}
+    	
+    }
+    
     public Vector<CourseData> getCourses(){
     	CourseDAO courseDAO = DAOFactory.getInstance().getCourseDAO();
     	return courseDAO.getCourses();

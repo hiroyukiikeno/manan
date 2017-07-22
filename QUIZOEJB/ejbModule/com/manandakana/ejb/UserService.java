@@ -215,5 +215,18 @@ public class UserService {
     		de.printStackTrace();
     	}
     }
+    
+    public boolean updateCurrentStage(String userId, String courseId, String stage){
+    	boolean success = true;
+    	UserDAO userDAO = DAOFactory.getInstance().getUserDAO();
+    	try {
+    		userDAO.updateStage(userId, courseId, stage);
+    		return success;
+    	} catch (DAOException de){
+    		System.err.println("Error occured in UserService accessing database");
+    		de.printStackTrace();
+    		return !success;
+    	}
+    }
 
 }

@@ -7,6 +7,31 @@ var oxs = {};
 var starttime = 0;
 var endtime = 0;
 var userdata = {};
+var qacount = 0;
+var removeStageListItems = function(){
+	  var stagenames = document.querySelectorAll('.stage-name');
+	  stagenames.forEach(function(el){
+		  var listElem = el.parentNode;
+		  var oldref = listElem.removeChild(el);
+	  });
+	  var stagedescs = document.querySelectorAll('.stage-description');
+	  stagedescs.forEach(function(el){
+		  var listElem = el.parentNode;
+		  var oldref = listElem.removeChild(el);
+	  });
+	  var stagebtns = document.querySelectorAll('.stage-rerun-btn');
+	  stagebtns.forEach(function(el){
+		  var listElem = el.parentNode;
+		  var oldref = listElem.removeChild(el);
+	  });
+	  var stagelistitems = document.querySelectorAll('.stage-item');
+	  stagelistitems.forEach(function(el){
+		  var listElem = el.parentNode;
+		  var oldref = listElem.removeChild(el);
+	  });
+}
+
+
 
 /* start the course */
 var loginToQuiz = function(){
@@ -33,7 +58,9 @@ var loginToQuiz = function(){
 				$('.message').text("Login Failed");
 			}
 		},
-		error: function(e){
+		error: function(jqXHR,textStatus, errorThrown){
+			console.log("textStatus: " + textStatus);
+			console.log("errorThrown: " + errorThrown);
 			$('.message').text("Login Failed");
 		}
 	  }
@@ -61,13 +88,15 @@ var retrieveQA = function(){
 	    		 $('#notpassed').addClass('noshow');
 	    		 $('#gotonextstage').addClass('noshow');
 	    		 $('#returntostart').addClass('noshow');
-	    		 $('.stagecomplete').fadeIn();
+	    		 $('.stagecomplete').removeClass('noshow');
 	    		 $('#stagenotready').removeClass('noshow');
 	    	 } else {
 	    		 console.log("Quiz loaded");
 	    	 }
 	     },
-	     error: function(e){
+	     error: function(jqXHR,textStatus, errorThrown){
+	    	 console.log("textStatus: " + textStatus);
+			 console.log("errorThrown: " + errorThrown);
 	    	 $('.message').text("Quiz loading failed");
 	     }
 	 }
@@ -75,6 +104,7 @@ var retrieveQA = function(){
 	promise.done(function(){
 		if(qadataall.length > 0){
 			$('.signin').addClass("noshow");
+			$('.stagecomplete').addClass("noshow");
 			$('.startbtn').removeClass('noshow');
 		}
 	});
@@ -161,12 +191,18 @@ var onStageCompletion = function(score){
 					  
 				  } 
 			  } else {
-				  $('.message').text('score upload failed');
+				  $('#passed').addClass('noshow');
+				  $('#notpassed').addClass('noshow');
+				  $('#gotonextstage').addClass('noshow');
+				  $('#returntostart').addClass('noshow');
+				  $('#stagenotready').removeClass('noshow');
 			  }
 			  console.log(response);
 			  console.log("score uploaded");
 		  },
-		  error: function(e){
+		  error: function(jqXHR,textStatus, errorThrown){
+			  console.log("textStatus: " + textStatus);
+			  console.log("errorThrown: " + errorThrown);
 			  $('.message').text("score upload failed");
 		  }
 	  }		
@@ -214,5 +250,80 @@ var onSubmitQuestionnaire = function(qnreAns, questionText){
 	});
 	promise.fail(function(){
 		$('#spin').removeClass('grgr');
+	});
+}
+
+/* ステージ一覧を表示 */
+var loadStagesList = function(cb){
+	thelist = [];
+	$('#spinbackground').addClass('grgrbg');
+	$('#spin').addClass('grgr');
+	var promise = $.ajax(
+	  {
+		  url: '/stagelist',
+		  type: 'GET',
+		  success: function(response){
+			console.log("submit successful");
+			thelist = response;
+			console.log(thelist);
+		  },
+		  error: function(jqXHR,textStatus, errorThrown){
+			  console.log("textStatus: " + textStatus);
+			  console.log("errorThrown: " + errorThrown);
+			  $('.message').text("Server Error Occured");
+		  }
+	  }
+	);
+	promise.done(function(){
+		cb(thelist);
+		$('#stagelist-box').removeClass('noshow');
+		$('#spinbackground').removeClass('grgrbg');
+		$('#spin').removeClass('grgr');
+	});
+	promise.fail(function(){
+		$('#spinbackground').removeClass('grgrbg');
+		$('#spin').removeClass('grgr');
+	});
+	return thelist;
+}
+
+var resetStage = function(ev){
+	var tgt = $(ev.target);
+	var stageName = tgt.parent().children('.stage-name').text();
+	console.log("going to stage: " + stageName);
+	$('#spinbackground').addClass('grgrbg');
+	$('#spin').addClass('grgr');
+	var resetStageParm = {userid: userdata.userid, resetToStage: stageName};
+	var promise = $.ajax(
+	  {
+		  url: '/resetstage',
+		  type: 'POST',
+		  data: resetStageParm,
+		  success: function(response){
+			  console.log("submit successful");
+		  },
+		  error: function(jqXHR,textStatus, errorThrown){
+			  console.log("textStatus: " + textStatus);
+			  console.log("errorThrown: " + errorThrown);
+			  $('.message').text("Update Failed");
+		  }
+	  }
+	);
+	promise.done(function(){
+		$('#spinbackground').removeClass('grgrbg');
+		$('#spin').removeClass('grgr');
+		userdata.stage = stageName;
+		$('#stage-name').text(userdata.stage);
+		$('#stagelist-box').addClass('noshow');
+		$('#stagenotready').addClass('noshow');
+		removeStageListItems();
+		qacount = 0;
+		stageresults = {};
+		oxs = {};
+		retrieveQA();
+	});
+	promise.fail(function(){
+		$('#spin').removeClass('grgr');
+		$('#spinbackground').removeClass('grgrbg');
 	});
 }

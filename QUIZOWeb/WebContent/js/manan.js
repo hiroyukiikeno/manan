@@ -10,7 +10,6 @@
 	});
 	
 	var qadata = {};
-	var qacount = 0;
 	var qnrecount = 0;
 	
 	var displayQuiz = function(){
@@ -111,7 +110,7 @@
 				qacount++;
 				qadata = getQAdata(qacount);
 				if(qadata == null){
-					$('.stagecomplete').fadeIn();
+					$('.stagecomplete').removeClass('noshow');
 					console.log("score: " + score);
 					endtime = Date.now();
 					onStageCompletion(score, starttime, endtime);
@@ -239,7 +238,7 @@
 		$('#gonext').css('display','none');
 		qadata = getQAdata(qacount);
 		if(qadata == null){
-			$('.stagecomplete').fadeIn();
+			$('.stagecomplete').removeClass('noshow');
 			console.log("score:" + score);
 			endtime = Date.now();
 			onStageCompletion(score,starttime,endtime);
@@ -251,7 +250,9 @@
 	/* 次のステージに進む */
 	$('#gotonextstage').click(function(ev){
 		ev.preventDefault();
-		$('.stagecomplete').fadeOut();
+		$('.stagecomplete').addClass('noshow');
+		$('#passed').addClass('noshow');
+		$('#gotonextstage').addClass('noshow');
 		$('#stage-name').text(userdata.stage);
 		qacount = 0;
 		stageresults = {};
@@ -266,7 +267,9 @@
 	/* ステージのはじめに戻る */
 	$('#returntostart').click(function(ev){
 		ev.preventDefault();
-		$('.stagecomplete').fadeOut();
+		$('.stagecomplete').addClass('noshow');
+		$('#notpassed').addClass('noshow');
+		$('#returntostart').addClass('noshow');
 		qacount = 0;
 		stageresults = {};
 		oxs = {};
@@ -328,7 +331,7 @@
 			$('#questionnaire').addClass('noshow');
 			qadata = getQAdata(qacount);
 			if(qadata == null){
-				$('.stagecomplete').fadeIn();
+				$('.stagecomplete').removeClass('noshow');
 				console.log("score: " + score);
 				endtime = Date.now();
 				onStageCompletion(score,starttime,endtime);
@@ -338,8 +341,37 @@
 		}
 	});
 	
-	$('.listlink').click(function(ev){
+	$('.golistlink').click(function(ev){
 		window.location.href = "/courselist";
 	});
+	
+	/* ステージリスト表示 */
+	  var showStagesList = function(){
+		    console.log("showing stages list");
+			var  list = loadStagesList(function(stagesList){
+				for (var stageItem in stagesList){
+					var itemtemplate = `<div class="stage-item">
+						<div class="stage-name">${stagesList[stageItem].stage}</div>
+						<div class="stage-description">${stagesList[stageItem].description}</div>
+						<a class="stage-rerun-btn" href="#">このステージに戻る</a>
+					</div>`.trim();
+					$('#stagelist').append(itemtemplate);
+				}
+				$('#stagelist').on("click",".stage-rerun-btn",resetStage);
+			});
+			
+		}
+	  
+	  
+
+	  $('#stagelistbtn').click(function(ev){
+			ev.preventDefault();
+			showStagesList();
+	  });
+	  $('#close-btn').click(function(ev){
+		  $('#stagelist').off("click",".stage-rerun-btn",resetStage);
+		  $('#stagelist-box').addClass('noshow');
+		  removeStageListItems();
+	  });
 	
 }());
